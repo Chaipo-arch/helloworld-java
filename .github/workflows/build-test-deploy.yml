@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest # Définit l'environnement d'exécution
     steps:
       - name: Récupération du code source
-        run: mvn clean package -DskipTests
+        run: cd ../..
+      - name: Récupération du code source
+        run : mvn clean package -DskipTests 
         
     
