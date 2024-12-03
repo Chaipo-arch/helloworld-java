@@ -45,6 +45,9 @@ jobs:
           MAVEN_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
         run: mvn clean package -DskipTests
 
+      - name: LancerTests
+        run: mvn test
+
 
 
 
