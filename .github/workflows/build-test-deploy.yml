@@ -25,6 +25,8 @@ jobs:
       # Construction du projet
       - name: Build project
         run: mvn clean package -DskipTests
+      - name: Build project2
+        run: mvn build package -DskipTests
 
    
 
