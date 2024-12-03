@@ -25,10 +25,8 @@ jobs:
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
-          key: maven-cache-${{ runner.os }}-${{ hashFiles('**/pom.xml', '**/pom.lock') }}
-          restore-keys: |
-            maven-cache-${{ runner.os }}-
+          path: "${{ github.workspace }}/.m2/repository"
+          key: ${{ runner.os }}-maven-${{hashFiles('**/pom.xml')}}
 
       # Étape 3 : Configuration du JDK
       - name: Set up Java
@@ -44,20 +42,11 @@ jobs:
       # Étape 5 : Construction du projet
       - name: Build project
         env:
-          MAVEN_OPTS: "-Dmaven.repo.local=~/.m2/repository"
+          MAVEN_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
         run: mvn clean package -DskipTests
 
-      # Étape 6 : Renommer le fichier jar
-      - name: Rename Jar
-        run: |
-          mv target/*.jar "helloworld-${{ env.PROJECT_VERSION }}.jar"
 
-      # Étape 7 : Sauvegarder l'artefact
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: helloworld-jar
-          path: "helloworld-${{ env.PROJECT_VERSION }}.jar"
+
 
    
 
