@@ -24,9 +24,6 @@ jobs:
       - name: Afficher la version du projet
         run: echo "PROJECT_VERSION=${{ env.PROJECT_VERSION }}"
         
-      - name: Build project
-        uses: actions/setup-java@v4.5.0
-        
       # Construction du projet
       - name: Build project
         run: mvn clean package -DskipTests
