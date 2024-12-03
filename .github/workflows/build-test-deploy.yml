@@ -25,12 +25,15 @@ jobs:
         run: echo "PROJECT_VERSION=${{ env.PROJECT_VERSION }}"
         
       - name: Build project
-        uses: actions/setup-java@v23.0.0
+        uses: actions/setup-java@v4.5.0
         
       # Construction du projet
       - name: Build project
         run: mvn clean package -DskipTests
-      
+        
+      - name: Rename Jar
+        run: |
+          mv target/*.jar "helloworld-${{ env.PROJECT_VERSION }}.jar"
 
    
 
