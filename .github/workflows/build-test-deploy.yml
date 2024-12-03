@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+
 env:
   PROJECT_VERSION: 1.0.0
 
@@ -16,21 +17,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Vérification et récupération du code source
+      # Étape 1 : Vérification et récupération du code source
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configuration de la version du projet
-      - name: Afficher la version du projet
+      # Étape 2 : Mise en place du cache Maven
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: maven-cache-${{ runner.os }}-${{ hashFiles('**/pom.xml', '**/pom.lock') }}
+          restore-keys: |
+            maven-cache-${{ runner.os }}-
+
+      # Étape 3 : Configuration du JDK
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Étape 4 : Afficher la version du projet
+      - name: Display project version
         run: echo "PROJECT_VERSION=${{ env.PROJECT_VERSION }}"
-        
-      # Construction du projet
+
+      # Étape 5 : Construction du projet
       - name: Build project
+        env:
+          MAVEN_OPTS: "-Dmaven.repo.local=~/.m2/repository"
         run: mvn clean package -DskipTests
-        
+
+      # Étape 6 : Renommer le fichier jar
       - name: Rename Jar
         run: |
           mv target/*.jar "helloworld-${{ env.PROJECT_VERSION }}.jar"
+
+      # Étape 7 : Sauvegarder l'artefact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helloworld-jar
+          path: "helloworld-${{ env.PROJECT_VERSION }}.jar"
 
    
 
