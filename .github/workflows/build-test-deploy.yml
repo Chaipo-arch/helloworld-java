@@ -81,3 +81,21 @@ jobs:
         env:
           MAVEN_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
         run: mvn test
+
+
+ # Job 3 : Déploiement
+  deploy:
+    runs-on: ubuntu-latest
+    needs: 
+      - build
+      - test # Dépend des jobs de build et de test
+    steps:
+      # Étape 1 : Récupération de l'artefact
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+
+      # Étape 2 : Simuler le déploiement
+      - name: Simulate deployment
+        run: echo "Déploiement simulé Artifact récupéré et prêt à déployer."
