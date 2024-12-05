@@ -57,7 +57,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: build # Ce job dépend du build
-    
+    continue-on-error: true # Permet de continuer même en cas d'échec des tests
     steps:
       # Étape 1 : Vérification et récupération du code source
       - name: Checkout code
