@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-output
-          path: target/*.jar # Remplacez par le chemin du fichier JAR généré
+          path: / # Remplacez par le chemin du fichier JAR généré
 
   # Job 2 : Tests unitaires
   test:
