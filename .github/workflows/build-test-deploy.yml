@@ -13,7 +13,8 @@ env:
   PROJECT_VERSION: 1.0.0
 
 jobs:
-  build-test-deploy:
+  # Job 1 : Build le projet
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,15 +46,38 @@ jobs:
           MAVEN_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
         run: mvn clean package -DskipTests
 
-      - name: LancerTests
+      # Étape 6 : Partage d'artifacts
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: target/*.jar # Remplacez par le chemin du fichier JAR généré
+
+  # Job 2 : Tests unitaires
+  test:
+    runs-on: ubuntu-latest
+    needs: build # Ce job dépend du build
+    steps:
+      # Étape 1 : Vérification et récupération du code source
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Mise en place du cache Maven
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: "${{ github.workspace }}/.m2/repository"
+          key: ${{ runner.os }}-maven-${{hashFiles('**/pom.xml')}}
+
+      # Étape 3 : Configuration du JDK
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Étape 4 : Lancer les tests
+      - name: Run unit tests
         env:
           MAVEN_OPTS: "-Dmaven.repo.local=${{ github.workspace }}/.m2/repository"
         run: mvn test
-
-
-
-
-   
-
-        
-    
